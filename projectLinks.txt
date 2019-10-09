@@ -1,0 +1,12 @@
+https://www.studica.com/blog/raspberry-pi-control-led
+
+https://thepihut.com/blogs/raspberry-pi-tutorials/27968772-turning-on-an-led-with-your-raspberry-pis-gpio-pins
+
+https://dordnung.de/raspberrypi-ledstrip/
+
+https://opensource.com/life/15/2/music-light-show-with-raspberry-pi
+
+https://pypi.org/project/RPi.GPIO/
+
+https://pinout.xyz/
+
