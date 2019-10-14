@@ -4,6 +4,8 @@ import mido
 import time
 from rpi_ws281x import PixelStrip, Color
 #import argparse
+#Test VLC with playing sounds
+import vlc
 
 import RPi.GPIO as GPIO
 #Setting the backend for the file due to issues installing the default backend
@@ -100,9 +102,12 @@ for msg in port.__iter__():
     if hasattr(msg, 'note') and msg.note == 53 and msg.type == 'note_on':
 	print("Turning on Orange String Lights")
 	GPIO.output(18, GPIO.HIGH)
+	LowF = vlc.MediaPlayer("./sound_samples/flute_F4_1_mezzo-forte_normal.mp3")
+	LowF.play()
         print(msg)
     elif hasattr(msg, 'note') and msg.note == 53 and msg.type == 'note_off':
 	print("Turning off")
+	LowF.stop()
 	GPIO.output(18, GPIO.LOW)
     elif hasattr(msg, 'note') and msg.note == 84 and msg.type == 'note_on':
 	print(msg)
