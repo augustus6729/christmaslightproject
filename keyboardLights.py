@@ -3,7 +3,7 @@ import mido
 #RGB LED stuff from tutorial Dr. Allen sent me
 import time
 from rpi_ws281x import PixelStrip, Color
-import argparse
+#import argparse
 
 import RPi.GPIO as GPIO
 #Setting the backend for the file due to issues installing the default backend
@@ -15,7 +15,7 @@ LED_PIN        = 12      # GPIO pin connected to the pixels (18 uses PWM!).
 #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA        = 10      # DMA channel to use for generating signal (try 10)
-LED_BRIGHTNESS = 128     # Set to 0 for darkest and 255 for brightest
+LED_BRIGHTNESS = 85     # Set to 0 for darkest and 255 for brightest
 LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
@@ -67,13 +67,6 @@ def colorWipe(strip, color, wait_ms=50):
         strip.show()
         time.sleep(wait_ms / 1000.0)
 
-# Main program logic follows:
-if __name__ == '__main__':
-    # Process arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--clear', action='store_true', help='clear the display on exit')
-    args = parser.parse_args()
-
 # Create NeoPixel object with appropriate configuration.
 strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
 # Intialize the library (must be called once before other functions).
@@ -89,15 +82,22 @@ GPIO.setup(18, GPIO.OUT)
 print(mido.backend)
 print(mido.get_input_names())
 
-inport = mido.open_input('AKM320 MIDI 1')
-msg = inport.receive()
+# Main program logic follows:
+if __name__ == '__main__':
+    # Process arguments
+   """ parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--clear', action='store_true', help='clear the display on exit')
+    args = parser.parse_args()"""
+
+
+port = mido.open_input('AKM320 MIDI 1')
+msg = port.receive()
 #This loop constantly checks for new messages coming into the port
-for msg in inport:
+for msg in port.__iter__():
    #check for the correct attribute to assign an action to the msg
    #in this instance we are checking for the note attribute to assign
    #the note name to the note itself, and only on note_on msg types
     if hasattr(msg, 'note') and msg.note == 53 and msg.type == 'note_on':
-        print("This is the low F")
 	print("Turning on Orange String Lights")
 	GPIO.output(18, GPIO.HIGH)
         print(msg)
@@ -105,17 +105,13 @@ for msg in inport:
 	print("Turning off")
 	GPIO.output(18, GPIO.LOW)
     elif hasattr(msg, 'note') and msg.note == 84 and msg.type == 'note_on':
-        print("This is the high C")
+	print(msg)
 	print("Set RGB strip to rainbow")
 	rainbow(strip)
-        print(msg)
     elif hasattr(msg, 'note') and msg.note == 84 and msg.type == 'note_off':
+	print(msg)
 	print("Clear RGB strip")
 	colorWipe(strip, Color(0, 0, 0), 10)
-	print(msg)
-    elif hasattr(msg, 'note') and msg.note == 55 and msg.type == 'note_on':
-	print("This is low G")
-	print(msg)
     else:
         print(msg)
 if args.clear:
