@@ -3,81 +3,13 @@ import mido
 #RGB LED stuff from tutorial Dr. Allen sent me
 import time
 from rpi_ws281x import PixelStrip, Color
-#import argparse
-
+from flask import Flask, render_template, request
 import RPi.GPIO as GPIO
+import urllib
+import webbrowser
+#import os
 #Setting the backend for the file due to issues installing the default backend
 mido.set_backend('mido.backends.portmidi')
- 
-# LED strip configuration:
-LED_COUNT      = 5      # Number of LED pixels.
-LED_PIN        = 12      # GPIO pin connected to the pixels (18 uses PWM!).
-#LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
-LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
-LED_DMA        = 10      # DMA channel to use for generating signal (try 10)
-LED_BRIGHTNESS = 85     # Set to 0 for darkest and 255 for brightest
-LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
-LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
-
-def wheel(pos):
-    """Generate rainbow colors across 0-255 positions."""
-    if pos < 85:
-        return Color(pos * 3, 255 - pos * 3, 0)
-    elif pos < 170:
-        pos -= 85
-        return Color(255 - pos * 3, 0, pos * 3)
-    else:
-        pos -= 170
-        return Color(0, pos * 3, 255 - pos * 3)
-
-def rainbow(strip, wait_ms=20, iterations=1):
-    """Draw rainbow that fades across all pixels at once."""
-    for j in range(256 * iterations):
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i, wheel((i + j) & 255))
-        strip.show()
-        time.sleep(wait_ms / 1000.0)
-
-
-def rainbowCycle(strip, wait_ms=20, iterations=5):
-    """Draw rainbow that uniformly distributes itself across all pixels."""
-    for j in range(256 * iterations):
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i, wheel(
-                (int(i * 256 / strip.numPixels()) + j) & 255))
-        strip.show()
-        time.sleep(wait_ms / 1000.0)
-
-
-def theaterChaseRainbow(strip, wait_ms=50):
-    """Rainbow movie theater light style chaser animation."""
-    for j in range(256):
-        for q in range(3):
-            for i in range(0, strip.numPixels(), 3):
-                strip.setPixelColor(i + q, wheel((i + j) % 255))
-            strip.show()
-            time.sleep(wait_ms / 1000.0)
-            for i in range(0, strip.numPixels(), 3):
-                strip.setPixelColor(i + q, 0)
-
-def colorWipe(strip, color, wait_ms=50):
-    """Wipe color across display a pixel at a time."""
-    for i in range(strip.numPixels()):
-        strip.setPixelColor(i, color)
-        strip.show()
-        time.sleep(wait_ms / 1000.0)
-
-# Create NeoPixel object with appropriate configuration.
-strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
-# Intialize the library (must be called once before other functions).
-strip.begin()
-
-#use Raspberry Pi board pin numbers
-GPIO.setmode(GPIO.BCM)
-
-#set channel for output
-GPIO.setup(18, GPIO.OUT)
-
 #for debug purposes print backend on program start
 print(mido.backend)
 print(mido.get_input_names())
@@ -91,6 +23,7 @@ if __name__ == '__main__':
 
 
 port = mido.open_input('AKM320 MIDI 1')
+print(webbrowser.get())
 msg = port.receive()
 #This loop constantly checks for new messages coming into the port
 for msg in port.__iter__():
@@ -98,21 +31,26 @@ for msg in port.__iter__():
    #in this instance we are checking for the note attribute to assign
    #the note name to the note itself, and only on note_on msg types
     if hasattr(msg, 'note') and msg.note == 53 and msg.type == 'note_on':
-	print("Turning on Orange String Lights")
-	GPIO.output(18, GPIO.HIGH)
+        print("Call Rainbow from Flask")
+        #webbrowser.open_new('http://localhost/18/on')
+        #os.system("chromium-browser http://localhost/18/on")
+        urllib.request.urlopen('http://localhost/18/on',data=None)
         print(msg)
     elif hasattr(msg, 'note') and msg.note == 53 and msg.type == 'note_off':
-	print("Turning off")
-	GPIO.output(18, GPIO.LOW)
+        print("Turning off")
+        print("Turn Lights Off From Flask")
+        urllib.request.urlopen('http://localhost/18/off',data=None)
+        #os.system("chromium-browser http://localhost/18/off")
+        #webbrowser.open('http://localhost/18/off',new=0,autoraise=False)
     elif hasattr(msg, 'note') and msg.note == 84 and msg.type == 'note_on':
-	print(msg)
-	print("Set RGB strip to rainbow")
-	rainbow(strip)
+        print(msg)
+        print("White Theater Chase")
+        urllib.request.urlopen('http://localhost/18/whiteTheaterChase',data=None)
     elif hasattr(msg, 'note') and msg.note == 84 and msg.type == 'note_off':
-	print(msg)
-	print("Clear RGB strip")
-	colorWipe(strip, Color(0, 0, 0), 10)
+        print(msg)
+        print("Clear RGB strip")
+        colorWipe(strip, Color(0, 0, 0), 10)
     else:
         print(msg)
 if args.clear:
-	colorWipe(strip, Color(0,0,0), 10)
+    colorWipe(strip, Color(0,0,0), 10)
