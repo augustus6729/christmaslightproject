@@ -3,6 +3,8 @@ from flask import Flask, render_template, request
 import time
 from neopixel import *
 import argparse
+import logging
+import threading
 
 # LED strip configuration:
 LED_COUNT      = 450     # Number of LED pixels.
@@ -10,7 +12,7 @@ LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
 #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA        = 10      # DMA channel to use for generating signal (try 10)
-LED_BRIGHTNESS = 80     # Set to 0 for darkest and 255 for brightest
+LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
 LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
@@ -52,10 +54,10 @@ def wheel(pos):
         pos -= 170
         return Color(0, pos * 3, 255 - pos * 3)
 
-def rainbow(strip, wait_ms=20, iterations=1):
+def rainbow(strip, start, end, wait_ms=20, iterations=1):
     """Draw rainbow that fades across all pixels at once."""
     for j in range(256*iterations):
-        for i in range(strip.numPixels()):
+        for i in range(start, end):
             strip.setPixelColor(i, wheel((i+j) & 255))
         strip.show()
         time.sleep(wait_ms/1000.0)
@@ -88,6 +90,39 @@ def theaterChase(strip, color, wait_ms=50, iterations=10):
             time.sleep(wait_ms/1000.0)
             for i in range(0, strip.numPixels(), 3):
                 strip.setPixelColor(i+q, 0)
+def theaterChaseRanger(strip, color,start,end, wait_ms=50, iterations=20):
+    """Movie theater light style chaser animation."""
+    for j in range(iterations):
+        for q in range(3):
+            for i in range(start, end, 3):
+                strip.setPixelColor(i+q, color)
+            strip.show()
+            time.sleep(wait_ms/1000.0)
+            for i in range(start, end, 3):
+                strip.setPixelColor(i+q, 0)                
+def theaterChase2(strip, start, end, step,wait_ms=70):
+    """attempt at red/green theater light style chaser animation."""
+    for j in range(20):
+        for q in range(2):
+            for i in range(0, strip.numPixels(), 2):
+                strip.setPixelColor(i+q, wheel((i+j) %92))
+            strip.show()
+            time.sleep(wait_ms/1000.0)
+            for i in range(0, strip.numPixels(), 2):
+                strip.setPixelColor(i+q, 0)              
+def theaterChaseRainbow(strip, wait_ms=35):
+    """Rainbow movie theater light style chaser animation."""
+    for j in range(20):
+        for q in range(3):
+            for i in range(0, strip.numPixels(), 3):
+                strip.setPixelColor(i+q, wheel((i+j) % 255))
+            strip.show()
+            time.sleep(wait_ms/1000.0)
+            for i in range(0, strip.numPixels(), 3):
+                strip.setPixelColor(i+q, 0)                     
+
+threads = list() 
+                          
 # The function below is executed when someone requests a URL with the pin number and action in it:
 @app.route("/<changePin>/<action>")
 def action(changePin, action):
@@ -97,18 +132,41 @@ def action(changePin, action):
    deviceName = pins[changePin]['name']
    # If the action part of the URL is "on," execute the code indented below:
    if action == "on":
-      rainbow(strip,1,1)
+      x=threading.Thread(target=rainbow, args=(strip,300,450,1,1))
+      x.start()
+      #threads.append(x)
+      #rainbow(strip,1,1)
       # Save the status message to be passed into the template:
       message = "Turned " + deviceName + " on."
   
    if action == "whiteTheaterChase":
        theaterChase(strip, Color(127, 127, 127))
        message = "White Theater Chase."
+   if action == "rainbowTheaterChase":
+       x=threading.Thread(target=theaterChaseRainbow, args=(strip))
+       x.start()
+       message = "Rainbow theater chase"  
+       #theaterChaseRainbow(strip)  
    if action == "redGreenAlternate":
-       colorWipeRange(strip, Color(255,0,0), 0, strip.numPixels(),2,10)
+       x=threading.Thread(target=colorWipeRange, args=(strip, Color(255,0,0), 0, strip.numPixels(),2,10))
+       y=threading.Thread(target=colorWipeRange, args=(strip, Color(0,255,0), 1, strip.numPixels()-1,2,10))
+       x.start()
+       y.start()
+       #colorWipeRange(strip, Color(255,0,0), 0, strip.numPixels(),2,10)
+       #colorWipeRange(strip, Color(0,255,0), 1, strip.numPixels()-1,2,10)
        message = "Alternating Red and Green"
-       colorWipeRange(strip, Color(0,255,0), 1, strip.numPixels()-1,2,10)
-
+   if action == "ccTheaterChase":
+       theaterChase(strip, Color(127, 127, 127,))
+       theaterChase(strip, Color(0, 255, 0))
+       message = "candycaneTheater Chase."
+   if action == "theaterChaseRanger":
+      # theaterChase2(strip,0,100,2,65)
+       theaterChaseRanger(strip,Color(204,204,0),0,157) 
+       theaterChaseRanger(strip,Color(0,127,255),0,100)
+       message = "multi" 
+   if action == "theaterChase2":
+       theaterChase2(strip,0,100,2,65)
+       message = "multi"
    if action == "off":
      # GPIO.output(changePin, GPIO.LOW)
       message = "Turned " + deviceName + " off."
@@ -122,8 +180,23 @@ def action(changePin, action):
        colorWipeRange(strip, Color(80,255,0),0,100,1,10)
    if action == "candyCane":
        colorWipeRange(strip, Color(0,255,0), 0, strip.numPixels(),2,10)
-       message = "Alternating Red and Green"
+       message = "Alternating Red and White"
        colorWipeRange(strip, Color(127,127,127), 1, strip.numPixels()-1,2,10)
+   if action == "x":
+       colorWipeRange(strip, Color(255,255,0), 0, strip.numPixels(),2,10)
+       message = "Alternating Blue and Yellow"
+       colorWipeRange(strip, Color(253,0,153), 1, strip.numPixels()-1,2,10)
+   if action == "Blue":
+       colorWipeRange(strip, Color(127,127,127), 0, strip.numPixels(),2,10)
+       message = "Alternating X"
+       colorWipeRange(strip, Color(0,0,255), 1, strip.numPixels()-1,2,10) 
+   if action == "purpleTheaterChase":
+       theaterChase(strip, Color(0,204,255))
+       message = "purple Theater Chase."
+   if action == "coralAndGreen":
+       colorWipeRange(strip,Color(85,255,85),0,strip.numPixels(),2,10)
+       colorWipeRange(strip,Color(255,0,0),1,strip.numPixels()-1,2,10)
+       
    # For each pin, read the pin state and store it in the pins dictionary:
    for pin in pins:
       pins[pin]['state'] = GPIO.input(pin)
