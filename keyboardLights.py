@@ -28,7 +28,7 @@ for msg in port.__iter__():
         mixer.music.load('/home/pi/christmaslightproject/TubeBells.wav')
         mixer.music.play()
         print("Call Rainbow from Flask")
-        urllib.request.urlopen('http://10.200.2.129/18/on',data=None)
+        urllib.request.urlopen('http://10.200.2.137/18/on',data=None)
         print(msg)
     if hasattr(msg, 'note') and msg.note == 53 and msg.type == 'note_off':
         mixer.music.stop()
@@ -38,7 +38,7 @@ for msg in port.__iter__():
         mixer.music.play()
         print(msg)
         print("Red Green Alternate")
-        urllib.request.urlopen('http://10.200.2.129/18/redGreenAlternate',data=None)
+        urllib.request.urlopen('http://10.200.2.137/18/redGreenAlternate',data=None)
     if hasattr(msg, 'note') and msg.note == 54 and msg.type == 'note_off':
         mixer.music.stop()
     if hasattr(msg, 'note') and msg.note == 55 and msg.type == 'note_on':
@@ -46,7 +46,7 @@ for msg in port.__iter__():
         mixer.music.play()
         print(msg)
         print("Color range")
-        urllib.request.urlopen('http://10.200.2.129/18/theaterChaseRanger',data=None)
+        urllib.request.urlopen('http://10.200.2.137/18/theaterChaseRanger',data=None)
     if hasattr(msg, 'note') and msg.note == 55 and msg.type == 'note_off':
         mixer.music.stop() 
     if hasattr(msg, 'note') and msg.note == 56 and msg.type == 'note_on':
@@ -54,7 +54,7 @@ for msg in port.__iter__():
         mixer.music.play()
         print(msg)
         print("Red Green Alternate")
-        urllib.request.urlopen('http://10.200.2.129/18/Blue',data=None)
+        urllib.request.urlopen('http://10.200.2.137/18/Blue',data=None)
     if hasattr(msg, 'note') and msg.note == 56 and msg.type == 'note_off':
         mixer.music.stop()    
     if hasattr(msg, 'note') and msg.note == 57 and msg.type == 'note_on':
@@ -62,7 +62,7 @@ for msg in port.__iter__():
         mixer.music.play()
         print(msg)
         print("Blue")
-        urllib.request.urlopen('http://10.200.2.129/18/rainbowTheaterChase',data=None)
+        urllib.request.urlopen('http://10.200.2.137/18/rainbowTheaterChase',data=None)
     if hasattr(msg, 'note') and msg.note == 57 and msg.type == 'note_off':
         mixer.music.stop()
     if hasattr(msg, 'note') and msg.note == 58 and msg.type == 'note_on':
@@ -70,7 +70,7 @@ for msg in port.__iter__():
         mixer.music.play()
         print(msg)
         print("CC")
-        urllib.request.urlopen('http://10.200.2.129/18/ccTheaterChase',data=None)
+        urllib.request.urlopen('http://10.200.2.137/18/ccTheaterChase',data=None)
     if hasattr(msg, 'note') and msg.note == 58 and msg.type == 'note_off':
         mixer.music.stop()
     if hasattr(msg, 'note') and msg.note == 59 and msg.type == 'note_on':
@@ -78,7 +78,7 @@ for msg in port.__iter__():
         mixer.music.play()
         print(msg)
         print("yellow blue")
-        urllib.request.urlopen('http://10.200.2.129/18/x',data=None)
+        urllib.request.urlopen('http://10.200.2.137/18/x',data=None)
     if hasattr(msg, 'note') and msg.note == 59 and msg.type == 'note_off':
         mixer.music.stop()           
     if hasattr(msg, 'note') and msg.note == 60 and msg.type == 'note_on':
@@ -86,7 +86,7 @@ for msg in port.__iter__():
         mixer.music.play()
         print(msg)
         print("Candy Cane")
-        urllib.request.urlopen('http://10.200.2.129/18/candyCane',data=None)
+        urllib.request.urlopen('http://10.200.2.137/18/candyCane',data=None)
     if hasattr(msg, 'note') and msg.note == 60 and msg.type == 'note_off':
         mixer.music.stop()
     if hasattr(msg, 'note') and msg.note == 61 and msg.type == 'note_on':
@@ -94,7 +94,7 @@ for msg in port.__iter__():
         mixer.music.play()
         print(msg)
         print("Red/Green/OrangeChase")
-        urllib.request.urlopen('http://10.200.2.129/18/theaterChase2',data=None)
+        urllib.request.urlopen('http://10.200.2.137/18/theaterChase2',data=None)
     if hasattr(msg, 'note') and msg.note == 61 and msg.type == 'note_off':
         mixer.music.stop()         
     if hasattr(msg, 'note') and msg.note == 62 and msg.type == 'note_on':
@@ -102,7 +102,7 @@ for msg in port.__iter__():
         mixer.music.play()
         print(msg)
         print("White Theater Chase")
-        urllib.request.urlopen('http://10.200.2.129/18/purpleTheaterChase',data=None)
+        urllib.request.urlopen('http://10.200.2.137/18/purpleTheaterChase',data=None)
     if hasattr(msg, 'note') and msg.note == 62 and msg.type == 'note_off':
         mixer.music.stop()
     if hasattr(msg, 'note') and msg.note == 63 and msg.type == 'note_on':
@@ -110,24 +110,28 @@ for msg in port.__iter__():
         mixer.music.play()
         print(msg)
         print("TheaterChaseRange")
-        urllib.request.urlopen('http://10.200.2.129/18/theaterChaseRanger',data=None)
+        urllib.request.urlopen('http://10.200.2.137/18/theaterChaseRanger',data=None)
     if hasattr(msg, 'note') and msg.note == 63 and msg.type == 'note_off':
-        mixer.music.stop()    
+        mixer.music.stop()
+    if hasattr(msg, 'note') and msg.note == 64 and msg.type == 'note_on':
+        print(msg)
+        print("Silver and Gold")
+        urllib.request.urlopen('http://10.200.2.137/18/silverAndGold',data=None)
     if hasattr(msg, 'note') and msg.note == 65 and msg.type == 'note_on':
         mixer.music.load('./bellsA5.wav')
         mixer.music.play()
         print(msg)
         print("OrangeRange")
-        urllib.request.urlopen('http://10.200.2.129/18/orangeRange',data=None)    
+        urllib.request.urlopen('http://10.200.2.137/18/orangeRange',data=None)    
     if hasattr(msg, 'note') and msg.note == 83 and msg.type == 'note_on':
         print(msg)
         print("Clear colors")
-        urllib.request.urlopen('http://10.200.2.129/18/off',data=None)
+        urllib.request.urlopen('http://10.200.2.137/18/off',data=None)
     if hasattr(msg, 'note') and msg.note == 84 and msg.type == 'note_on':
         mixer.music.load('./KawaiBellTree.wav')
         mixer.music.play()
         print(msg)
         print("White Theater Chase")
-        urllib.request.urlopen('http://10.200.2.129/18/whiteTheaterChase',data=None)    
+        urllib.request.urlopen('http://10.200.2.137/18/whiteTheaterChase',data=None)    
     else:
         print(msg)
