@@ -7,7 +7,7 @@ import logging
 import threading
 
 # LED strip configuration:
-LED_COUNT      = 450     # Number of LED pixels.
+LED_COUNT      = 900   # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
 #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
@@ -31,6 +31,14 @@ for pin in pins:
    GPIO.setup(pin, GPIO.OUT)
    #GPIO.output(pin, GPIO.LOW)
    
+class Tree:
+    def __init__(self,start,numLights):
+        self.start = start
+        self.numLights = numLights
+
+t1 = Tree(0,300)
+t2 = Tree(451,750)
+
 @app.route("/")
 def main():
    # For each pin, read the pin state and store it in the pins dictionary:
@@ -132,7 +140,7 @@ def action(changePin, action):
    deviceName = pins[changePin]['name']
    # If the action part of the URL is "on," execute the code indented below:
    if action == "on":
-      x=threading.Thread(target=rainbow, args=(strip,300,450,1,1))
+      x=threading.Thread(target=rainbow, args=(strip,0,strip.numPixels()/2,1,1))
       x.start()
       #threads.append(x)
       #rainbow(strip,1,1)
@@ -196,6 +204,18 @@ def action(changePin, action):
    if action == "coralAndGreen":
        colorWipeRange(strip,Color(85,255,85),0,strip.numPixels(),2,10)
        colorWipeRange(strip,Color(255,0,0),1,strip.numPixels()-1,2,10)
+       message = "Coral and Green"
+   if action == "silverAndGold":
+       colorWipeRange(strip,Color(255,255,255),0,strip.numPixels(),2,10)
+       colorWipeRange(strip,Color(255,255,47),1,strip.numPixels()-1,2,10)
+       message = "Silver and Gold"
+   if action == "treeTest":
+       colorWipeRange(strip,Color(255,255,255),t1.start,t1.numLights/4,1,10)
+       colorWipeRange(strip,Color(0,255,0),t1.numLights/4+1,t1.numLights/2,1,10)
+       colorWipeRange(strip,Color(255,255,0),t1.numLights/2+1,t1.numLights*3/4,1,10)
+       colorWipeRange(strip,Color(255,0,255),t1.numLights*3/4+1,t1.numLights,1,10)
+       message = "Tree Test"
+       
        
    # For each pin, read the pin state and store it in the pins dictionary:
    for pin in pins:
