@@ -213,7 +213,7 @@ def action(changePin, action):
        colorWipeRange(strip,Color(255,255,255),t1.start,t1.numLights/4,1,10)
        colorWipeRange(strip,Color(0,255,0),t1.numLights/4+1,t1.numLights/2,1,10)
        colorWipeRange(strip,Color(255,255,0),t1.numLights/2+1,t1.numLights*3/4,1,10)
-       colorWipeRange(strip,Color(255,0,255),t1.numLights*3/4+1,t1.numLights,1,10)
+       colorWipeRange(strip,Color(255,0,255),t1.numLights*3/4+1,t1.numLights-1,1,10)
        message = "Tree Test"
        
        
