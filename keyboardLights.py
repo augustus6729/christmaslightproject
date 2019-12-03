@@ -122,7 +122,37 @@ for msg in port.__iter__():
         mixer.music.play()
         print(msg)
         print("OrangeRange")
-        urllib.request.urlopen('http://10.200.2.137/18/orangeRange',data=None)    
+        urllib.request.urlopen('http://10.200.2.137/18/orangeRange',data=None)
+    if hasattr(msg, 'note') and msg.note == 66 and msg.type == 'note_on':
+        mixer.music.load('./bellsA5.wav')
+        mixer.music.play()
+        print(msg)
+        print("Tree Test")
+        urllib.request.urlopen('http://10.200.2.137/18/treeTest',data=None)
+    if hasattr(msg, 'note') and msg.note == 67 and msg.type == 'note_on':
+        print(msg)
+        print("WhiteBushChase")
+        urllib.request.urlopen('http://10.200.2.137/18/whiteBushChase')
+    if hasattr(msg, 'note') and msg.note == 68 and msg.type == 'note_on':
+        print(msg)
+        print("Bush 1 Green and Gold")
+        urllib.request.urlopen('http://10.200.2.137/18/bushGreenGold')
+    if hasattr(msg, 'note') and msg.note == 69 and msg.type == 'note_on':
+        print(msg)
+        print("Tree Combo CandyCane Chase")
+        urllib.request.urlopen('http://10.200.2.137/18/treeComboChase')
+    if hasattr(msg, 'note') and msg.note == 70 and msg.type == 'note_on':
+        print(msg)
+        print("Pink and Blue Trees")
+        urllib.request.urlopen('http://10.200.2.137/18/babyColors')
+    if hasattr(msg, 'note') and msg.note == 71 and msg.type == 'note_on':
+        print(msg)
+        print("Whole Side Orange")
+        urllib.request.urlopen('http://10.200.2.137/18/orangeSide')   
+    if hasattr(msg, 'note') and msg.note == 72 and msg.type == 'note_on':
+        print(msg)
+        print("Red 2 Blue")
+        urllib.request.urlopen('http://10.200.2.137/18/red2Blue')                     
     if hasattr(msg, 'note') and msg.note == 83 and msg.type == 'note_on':
         print(msg)
         print("Clear colors")
