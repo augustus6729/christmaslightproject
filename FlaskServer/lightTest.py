@@ -32,6 +32,7 @@ for pin in pins:
    #GPIO.output(pin, GPIO.LOW)
    
 class Tree:
+<<<<<<< HEAD
     def __init__(self,start,end):
         self.start = start
         self.end = end
@@ -43,6 +44,14 @@ class BushGroup:
 t1 = Tree(0,299)
 t2 = Tree(450,749)
 b1 = BushGroup(300,449)
+=======
+    def __init__(self,start,numLights):
+        self.start = start
+        self.numLights = numLights
+
+t1 = Tree(0,300)
+t2 = Tree(451,750)
+>>>>>>> fd0678f145719f9931f49b0ea24ac80aa8af42ee
 
 @app.route("/")
 def main():
@@ -145,7 +154,11 @@ def action(changePin, action):
    deviceName = pins[changePin]['name']
    # If the action part of the URL is "on," execute the code indented below:
    if action == "on":
+<<<<<<< HEAD
       x=threading.Thread(target=rainbow, args=(strip,t2.start,t2.end,1,1))
+=======
+      x=threading.Thread(target=rainbow, args=(strip,0,strip.numPixels()/2,1,1))
+>>>>>>> fd0678f145719f9931f49b0ea24ac80aa8af42ee
       x.start()
       #threads.append(x)
       #rainbow(strip,1,1)
@@ -215,6 +228,7 @@ def action(changePin, action):
        colorWipeRange(strip,Color(255,255,47),1,strip.numPixels()-1,2,10)
        message = "Silver and Gold"
    if action == "treeTest":
+<<<<<<< HEAD
        colorWipeRange(strip,Color(255,255,255),t1.start,t1.end/4,1,10)
        colorWipeRange(strip,Color(0,255,0),t1.end/4+1,t1.end/2,1,10)
        colorWipeRange(strip,Color(255,255,0),t1.end/2+1,t1.end*3/4,1,10)
@@ -267,6 +281,13 @@ def action(changePin, action):
       x.start()
       y.start()
       message = "Red 2 Blue"
+=======
+       colorWipeRange(strip,Color(255,255,255),t1.start,t1.numLights/4,1,10)
+       colorWipeRange(strip,Color(0,255,0),t1.numLights/4+1,t1.numLights/2,1,10)
+       colorWipeRange(strip,Color(255,255,0),t1.numLights/2+1,t1.numLights*3/4,1,10)
+       colorWipeRange(strip,Color(255,0,255),t1.numLights*3/4+1,t1.numLights-1,1,10)
+       message = "Tree Test"
+>>>>>>> fd0678f145719f9931f49b0ea24ac80aa8af42ee
        
        
    # For each pin, read the pin state and store it in the pins dictionary:
