@@ -7,7 +7,7 @@ import logging
 import threading
 
 # LED strip configuration:
-LED_COUNT      = 900   # Number of LED pixels.
+LED_COUNT      = 750   # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
 #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
@@ -43,7 +43,6 @@ class BushGroup:
 t1 = Tree(0,299)
 t2 = Tree(450,749)
 b1 = BushGroup(300,449)
-b2 = BushGroup(750,899)
 
 @app.route("/")
 def main():
@@ -124,7 +123,16 @@ def theaterChase2(strip, start, end, step,wait_ms=50):
             time.sleep(wait_ms/1000.0)
             for i in range(0, strip.numPixels(), 2):
                 strip.setPixelColor(i+q, 0)              
-                    
+def theaterChase3(strip, tc3start, tc3end, step,wait_ms=50):
+    """attempt at red/green theater light style chaser animation."""
+    for j in range(10):
+        for q in range(2):
+            for i in range(tc3start, tc3end, 2):
+                strip.setPixelColor(i+q, wheel((i+j) %154))
+            strip.show()
+            time.sleep(wait_ms/1000.0)
+            for i in range(tc3start, tc3end, 2):
+                strip.setPixelColor(i+q, 0)                   
 
 threads = list() 
                           
@@ -141,6 +149,7 @@ def action(changePin, action):
       x.start()
       y=threading.Thread(target=rainbow, args=(strip,t2.start,t2.end,1,1))
       y.start()
+      # Rainbow Trees
       # Save the status message to be passed into the template:
       message = "Turned " + deviceName + " on."
   
@@ -150,40 +159,106 @@ def action(changePin, action):
        x.start()
        y.start()
        message = "White Theater Chase."
-   if action == "3Colorbomb":
+   if action == "americaTree":
        colorWipeRange(strip,Color(0,255,0),t1.start,t1.end,3,10)
        colorWipeRange(strip,Color(127,127,127),t1.start+1,t1.end-1,3,10)
        colorWipeRange(strip,Color(0,0,255),t1.start+2,t1.end-2,3,10)
-       message = "Rainbow theater chase"  
+       colorWipeRange(strip,Color(0,255,0),t2.start,t2.end,3,10)
+       colorWipeRange(strip,Color(127,127,127),t2.start+1,t2.end-1,3,10)
+       colorWipeRange(strip,Color(0,0,255),t2.start+2,t2.end-2,3,10)
+       message = "America Tree"  
        #theaterChaseRainbow(strip)  
-   if action == "redGreenAlternate":
-       x=threading.Thread(target=colorWipeRange, args=(strip, Color(255,0,0), 0, strip.numPixels(),2,10))
-       y=threading.Thread(target=colorWipeRange, args=(strip, Color(0,255,0), 1, strip.numPixels()-1,2,10))
+   if action == "americaBear":
+       colorWipeRange(strip,Color(0,255,0),t1.start,t1.end,3,10)
+       colorWipeRange(strip,Color(127,127,127),t1.start+1,t1.end-1,3,10)
+       colorWipeRange(strip,Color(0,0,255),t1.start+2,t1.end-2,3,10)
+       colorWipeRange(strip,Color(0,255,0),b1.start,b1.end,3,10)
+       colorWipeRange(strip,Color(127,127,127),b1.start+1,b1.end-1,3,10)
+       colorWipeRange(strip,Color(0,0,255),b1.start+2,b1.end-2,3,10)
+       colorWipeRange(strip,Color(0,255,0),t2.start,t2.end,3,10)
+       colorWipeRange(strip,Color(127,127,127),t2.start+1,t2.end-1,3,10)
+       colorWipeRange(strip,Color(0,0,255),t2.start+2,t2.end-2,3,10)
+       message = "America Tree"
+   if action == "americaBush":
+       colorWipeRange(strip,Color(0,255,0),b1.start,b1.end,3,10)
+       colorWipeRange(strip,Color(127,127,127),b1.start+1,b1.end-1,3,10)
+       colorWipeRange(strip,Color(0,0,255),b1.start+2,b1.end-2,3,10)
+       message = "AMERICA bush"
+   if action == "3colorBush":
+       colorWipeRange(strip,Color(0,255,255),b1.start,b1.end,3,10)
+       colorWipeRange(strip,Color(255,255,47),b1.start+1,b1.end-1,3,10)
+       colorWipeRange(strip,Color(127,127,127),b1.start+2,b1.end-2,3,10)
+       message = "gold silver purple"
+   if action == "ccBush":
+       colorWipeRange(strip,Color(0,255,0),b1.start,b1.end,2,10)
+       colorWipeRange(strip,Color(127,127,127),b1.start+1,b1.end-2,2,10)
+       message="candy cane bush"
+   if action == "bushBlue":
+       x=threading.Thread(target=theaterChaseRanger, args=(strip, Color(0,0,255), b1.start, b1.end,40,10))
+       x.start()
+       message = "Bush Blue"
+   if action == "5colorBush":
+       colorWipeRange(strip,Color(0,255,255),b1.start,b1.end,5,10)
+       colorWipeRange(strip,Color(0,255,0),b1.start+1,b1.end-1,5,10)
+       colorWipeRange(strip,Color(127,127,127),b1.start+2,b1.end-2,5,10)
+       colorWipeRange(strip,Color(255,255,47),b1.start+3,b1.end-3,5,10)
+       colorWipeRange(strip,Color(255,0,0),b1.start+4,b1.end-4,5,10)
+       message = "gold silver purple"    
+   if action == "4colorTree":
+       colorWipeRange(strip,Color(255,255,47),t1.start,t1.end,4,10)
+       colorWipeRange(strip,Color(0,255,0),t1.start+1,t1.end-1,4,10)
+       colorWipeRange(strip,Color(127,127,100),t1.start+2,t1.end-2,4,10)
+       colorWipeRange(strip,Color(255,0,0),t1.start+3,t1.end-3,4,10)
+       colorWipeRange(strip,Color(255,255,47),t2.start,t2.end,4,10)
+       colorWipeRange(strip,Color(0,255,0),t2.start+1,t2.end-1,4,10)
+       colorWipeRange(strip,Color(127,127,100),t2.start+2,t2.end-2,4,10)
+       colorWipeRange(strip,Color(255,0,0),t2.start+3,t2.end-3,4,10)
+       message = "4color tree"
+   if action == "treeBlue":
+       x=threading.Thread(target=theaterChaseRanger, args=(strip, Color(0,0,255), t1.start, t1.end,40,10))
+       y=threading.Thread(target=theaterChaseRanger, args=(strip, Color(255,255,47), t2.start, t2.end,40,10))
        x.start()
        y.start()
+       message = "Blue and gold."
+   if action == "redGreenAlternate":
+       x=threading.Thread(target=colorWipeRange, args=(strip, Color(255,0,0), t1.start, t2.end,2,10))
+       y=threading.Thread(target=colorWipeRange, args=(strip, Color(0,255,0), t1.start+1, t2.end,2,10))
+       x.start()
+       y.start()
+       # move to papabear
        #colorWipeRange(strip, Color(255,0,0), 0, strip.numPixels(),2,10)
        #colorWipeRange(strip, Color(0,255,0), 1, strip.numPixels()-1,2,10)
        message = "Alternating Red and Green"
    if action == "ccTheaterChase":
        x=threading.Thread(target=theaterChaseRanger, args=(strip, Color(127,127,127), b1.start, b1.end,40,10))
-       y=threading.Thread(target=theaterChaseRanger, args=(strip, Color(0,255,0), b2.start, b2.end,40,10))
+       #y=threading.Thread(target=theaterChaseRanger, args=(strip, Color(0,255,0), b2.start, b2.end,40,10))
        x.start()
-       y.start()
+       #.start()
        #Put y lines on other bush (knew start and end)
        #theaterChase(strip, Color(127, 127, 127,))
        #theaterChase(strip, Color(0, 255, 0))
        message = "candycaneTheater Chase."
+   if action == "whiteTheaterChase":
+       x=threading.Thread(target=theaterChaseRanger, args=(strip, Color(127,127,127), b1.start, b1.end,40,10))
+       
+       x.start()
+       
+       message = "White Theater Chase."
    if action == "theaterChaseRanger":
       
        x=threading.Thread(target=theaterChaseRanger, args=(strip, Color(204,204,0), b1.start, b1.end,40,10))
-       y=threading.Thread(target=theaterChaseRanger, args=(strip, Color(0,127,255), b2.start, b2.end,40,10)) 
+       #y=threading.Thread(target=theaterChaseRanger, args=(strip, Color(0,127,255), b2.start, b2.end,40,10)) 
        x.start()
-       y.start()
+       #y.start()
        #Put y lines on other bush (knew start and end)
       
        message = "multi" 
    if action == "theaterChase2":
        x=threading.Thread(target=theaterChase2, args=(strip,b1.start,b1.end,2,50))
+       x.start()
+       message = "multi"
+   if action == "theaterChase3":
+       x=threading.Thread(target=theaterChase3, args=(strip,b1.start,b1.end,2,50))
        x.start()
        message = "multi"
    if action == "off":
@@ -206,6 +281,7 @@ def action(changePin, action):
        message = "Alternating Blue and Yellow"
        colorWipeRange(strip, Color(253,0,153), 1, strip.numPixels()-1,2,10)
    if action == "Blue":
+      # move to papabear
        colorWipeRange(strip, Color(127,127,127), 0, strip.numPixels(),2,10)
        message = "Alternating X"
        colorWipeRange(strip, Color(0,0,255), 1, strip.numPixels()-1,2,10) 
@@ -216,6 +292,7 @@ def action(changePin, action):
        y.start()
        #theaterChase(strip, Color(0,204,255))
        message = "purple Theater Chase."
+   
    if action == "coralAndGreen":
        colorWipeRange(strip,Color(85,255,85),0,strip.numPixels(),2,10)
        colorWipeRange(strip,Color(255,0,0),1,strip.numPixels()-1,2,10)
@@ -229,6 +306,10 @@ def action(changePin, action):
        colorWipeRange(strip,Color(0,255,0),t1.end/4+1,t1.end/2,1,10)
        colorWipeRange(strip,Color(255,255,0),t1.end/2+1,t1.end*3/4,1,10)
        colorWipeRange(strip,Color(255,0,255),t1.end*3/4+1,t1.end,1,10)
+       colorWipeRange(strip,Color(255,255,255),t2.start,t2.end/4+450,1,10)
+       colorWipeRange(strip,Color(0,255,0),t1.end/4+451,t1.end/2+450,1,10)
+       colorWipeRange(strip,Color(255,255,0),t1.end/2+451,t1.end*3/4+450,1,10)
+       colorWipeRange(strip,Color(255,0,255),t1.end*3/4+451,t1.end+450,1,10)
        message = "Tree Test"
    if action == "bushTest":
         colorWipeRange(strip,Color(255,0,0),300,324,1,10)
@@ -255,6 +336,11 @@ def action(changePin, action):
    if action == "bushPink":
       colorWipeRange(strip,Color(55,190,51),b1.start,b1.end,1,10)
       message = "Pink Bushes"
+   if action == "pinkRedWhite":
+       colorWipeRange(strip,Color(55,190,51),b1.start,b1.end,3,10)
+       colorWipeRange(strip,Color(0,255,0),b1.start+1,b1.end-1,3,10)
+       colorWipeRange(strip,Color(127,127,127),b1.start+2,b1.end-2,3,10)
+       message="pinkredwhiteBUSH"
    if action == "treeComboChase":
       x=threading.Thread(target=theaterChaseRanger, args=(strip,Color(0,255,0),t1.start,t1.end,40,10))
       y=threading.Thread(target=theaterChaseRanger, args=(strip,Color(255,255,255),t2.start,t2.end,40,10))
