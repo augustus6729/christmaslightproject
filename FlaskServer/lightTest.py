@@ -7,7 +7,7 @@ import logging
 import threading
 
 # LED strip configuration:
-LED_COUNT      = 750   # Number of LED pixels.
+LED_COUNT      = 900   # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
 #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
@@ -35,14 +35,15 @@ class Tree:
     def __init__(self,start,end):
         self.start = start
         self.end = end
-class BushGroup:
+class Bush:
     def __init__(self,start,end):
         self.start = start
         self.end = end
 
 t1 = Tree(0,299)
-t2 = Tree(450,749)
-b1 = BushGroup(300,449)
+t2 = Tree(600,899)
+b1 = Bush(300,449)
+b2 = Bush(450,599)
 
 @app.route("/")
 def main():
