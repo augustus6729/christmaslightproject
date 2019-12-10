@@ -7,7 +7,7 @@ import logging
 import threading
 
 # LED strip configuration:
-LED_COUNT      = 750   # Number of LED pixels.
+LED_COUNT      = 900   # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
 #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
@@ -35,14 +35,15 @@ class Tree:
     def __init__(self,start,end):
         self.start = start
         self.end = end
-class BushGroup:
+class Bush:
     def __init__(self,start,end):
         self.start = start
         self.end = end
 
-t1 = Tree(0,299)
-t2 = Tree(450,749)
-b1 = BushGroup(300,449)
+t1 = Tree(0,300)
+t2 = Tree(600,899)
+b1 = Bush(300,599)
+
 
 @app.route("/")
 def main():
@@ -285,13 +286,11 @@ def action(changePin, action):
        colorWipeRange(strip, Color(127,127,127), 0, strip.numPixels(),2,10)
        message = "Alternating X"
        colorWipeRange(strip, Color(0,0,255), 1, strip.numPixels()-1,2,10) 
-   if action == "purpleTheaterChase":
-       x=threading.Thread(target=theaterChaseRanger, args=(strip, Color(0,204,255), t1.start, t1.end,40,10))
-       y=threading.Thread(target=theaterChaseRanger, args=(strip, Color(0,204,255), t2.start, t2.end,40,10))
-       x.start()
-       y.start()
-       #theaterChase(strip, Color(0,204,255))
-       message = "purple Theater Chase."
+  
+   if action == "pink":
+       colorWipeRange(strip,Color(111,255,97),b1.start,b1.end,1,10)
+      
+       message="pink"
    
    if action == "coralAndGreen":
        colorWipeRange(strip,Color(85,255,85),0,strip.numPixels(),2,10)
