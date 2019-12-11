@@ -44,7 +44,6 @@ t1 = Tree(0,300)
 t2 = Tree(600,899)
 b1 = Bush(300,599)
 
-
 @app.route("/")
 def main():
    # For each pin, read the pin state and store it in the pins dictionary:
@@ -154,12 +153,15 @@ def action(changePin, action):
       # Save the status message to be passed into the template:
       message = "Turned " + deviceName + " on."
   
-   if action == "whiteTheaterChase":
-       x=threading.Thread(target=theaterChaseRanger, args=(strip, Color(127,127,127), t1.start, t1.end,40,10))
-       y=threading.Thread(target=theaterChaseRanger, args=(strip, Color(127,127,127), b1.start, b1.end,40,10))
-       x.start()
-       y.start()
+   if action == "allWhite":
+       colorWipeRange(strip,Color(127,127,127),t1.start,t2.end,1,10)
        message = "White Theater Chase."
+   if action == "allGreen":
+       colorWipeRange(strip,Color(255,0,0),t1.start,t2.end,1,10)
+       message = "White Theater Chase."
+   if action == "allRed":
+       colorWipeRange(strip,Color(0,255,0),t1.start,t2.end,1,10)
+       message = "White Theater Chase."             
    if action == "americaTree":
        colorWipeRange(strip,Color(0,255,0),t1.start,t1.end,3,10)
        colorWipeRange(strip,Color(127,127,127),t1.start+1,t1.end-1,3,10)
@@ -239,12 +241,6 @@ def action(changePin, action):
        #theaterChase(strip, Color(127, 127, 127,))
        #theaterChase(strip, Color(0, 255, 0))
        message = "candycaneTheater Chase."
-   if action == "whiteTheaterChase":
-       x=threading.Thread(target=theaterChaseRanger, args=(strip, Color(127,127,127), b1.start, b1.end,40,10))
-       
-       x.start()
-       
-       message = "White Theater Chase."
    if action == "theaterChaseRanger":
       
        x=threading.Thread(target=theaterChaseRanger, args=(strip, Color(204,204,0), b1.start, b1.end,40,10))
