@@ -42,8 +42,7 @@ class Bush:
 
 t1 = Tree(0,299)
 t2 = Tree(600,899)
-b1 = Bush(300,449)
-b2 = Bush(450,599)
+b1 = Bush(300,599)
 
 @app.route("/")
 def main():
